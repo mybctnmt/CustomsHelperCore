@@ -1,0 +1,36 @@
+<view class="container">
+  <t-dialog visible="{{showWithInput}}" title="帐号绑定" confirm-btn="{{ { content: '绑定', variant: 'base' } }}" cancel-btn="取消" bind:confirm="confirmDialog" bind:cancel="closeDialog">
+    <t-input model:value="{{ username }}" borderless class="dialog-input" clearable slot="content" placeholder="请输入帐号" placeholder-class="placeholder" />
+    <t-input model:value="{{ password }}" borderless class="dialog-input" clearable slot="content" placeholder="请输入密码" placeholder-class="placeholder" type="password" />
+  </t-dialog>
+  <t-cell bindtap="{{(!bindingIf ? 'bindingClick' : '')}}" title="{{!bindingIf ? '微信用户' : userInfo.RealName}}" hover bind:tap="showDialog" data-key="showWithInput">
+    <view class="avatar" slot="left-icon">
+      <!-- <open-data type="userAvatarUrl" /> -->
+      <t-image src="/assets/images/women.png" wx:if="{{userInfo.Sex == 0}}"/>
+      <t-image src="/assets/images/men.png" wx:else/>
+    </view>
+    <view slot="description">
+      <text class="binding-info" wx:if="{{bindingIf}}"><text>{{userInfo.UserName}}</text>，已绑定</text>
+      <text class="binding-info" style="color: #256adf" wx:else>点击后进行绑定操作</text>
+    </view>
+  </t-cell>
+  <view style="margin-top: 50rpx;" wx:if="{{bindingIf}}">
+    <t-divider content="左滑解绑账号"/>
+    <t-cell-group theme="card">
+      <t-swipe-cell>
+          <t-cell theme="card" title="{{userInfo.UserName}}">
+            <view slot="note">
+              <t-tag theme="primary" size="large">绑定成功</t-tag>
+            </view>
+          </t-cell>
+          <view slot="right" class="btn-wrapper">
+            <view class="btn delete-btn" bind:tap="unBindingClick">解绑</view>
+          </view>
+      </t-swipe-cell>
+    </t-cell-group>
+  </view>
+  <t-cell-group theme="card" style="margin-top: 50rpx;">
+    <t-cell title="使用文档" leftIcon="file-word" hover arrow />
+    <t-cell title="问题提交" leftIcon="help-circle" hover arrow />
+  </t-cell-group>
+</view>

@@ -1,0 +1,36 @@
+.container .dialog-input {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  margin-top: 32rpx;
+  border-radius: 8rpx;
+  background-color: #f3f3f3;
+  box-sizing: border-box;
+}
+
+.container .placeholder {
+  color: rgba(0, 0, 0, 0.4);
+  line-height: 96rpx;
+}
+
+.delete-btn {
+  background-color: #e34d59;
+}
+
+.btn-wrapper {
+  height: 100%;
+}
+
+.btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 120rpx;
+  height: 100%;
+  color: white;
+}
+.avatar .t-image {
+  width: 240rpx;
+  height: 240rpx;
+  margin-right: 15rpx;
+}

@@ -1,0 +1,4 @@
+<view>
+  <task-list type="2"></task-list>
+  <t-fab icon="add" bind:click="addClick" aria-label="增加"></t-fab>
+</view>

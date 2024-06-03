@@ -1,0 +1,10 @@
+{
+  "component": true,
+  "usingComponents": {
+    "t-cell": "tdesign-miniprogram/cell/cell",
+    "t-tag": "tdesign-miniprogram/tag/tag",
+    "t-loading": "tdesign-miniprogram/loading/loading",
+    "t-badge": "tdesign-miniprogram/badge/badge",
+    "t-empty": "tdesign-miniprogram/empty/empty"
+  }
+}

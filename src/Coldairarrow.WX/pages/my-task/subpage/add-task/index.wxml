@@ -1,0 +1,63 @@
+<view class="container">
+  <t-popup visible="{{visible}}" bind:visible-change="onVisibleChange" placement="bottom">
+    <view class="block">
+      <view class="header">
+          <view class="btn btn--cancel" aria-role="button" bind:tap="cancel">取消</view>
+          <view class="title">选择订单</view>
+          <view class="btn btn--confirm" aria-role="button" bind:tap="confirm">确定</view>
+        </view>
+        <view slot="content">
+          <view class="example-search">
+            <t-dropdown-menu>
+              <t-dropdown-item options="{{order.options}}" value="{{order.value}}" bind:change="onOrderChange" />
+            </t-dropdown-menu>
+            <t-search model:value="{{keyword}}" placeholder="{{orderPlaceholder}}" />
+            <t-button theme="primary" size="medium" bind:tap="search" icon="search" shape="square" aria-label="搜索" />
+          </view>
+          <scroll-view style="height: calc(100vh - 295rpx);" scroll-y="true">
+            <t-radio-group value="{{emailOrderIndex}}" bind:change="onChange" wx:if="{{emailOrders && emailOrders.length > 0}}">
+              <view wx:for="{{emailOrders}}" wx:key="index" class="card {{emailOrderIndex == index ? 'card--active' : ''}}">
+                <t-icon wx:if="{{emailOrderIndex == index}}" name="check" t-class="card__icon" />
+                <t-radio value="{{index}}" label="{{item.OrderNo}}" icon="none" borderless>
+                  <view slot="content">
+                    <view wx:if="{{item.SeqNo}}">统一编号：{{item.SeqNo}}</view>
+                    <view wx:if="{{item.EntryId}}">海关编号:{{item.EntryId}}</view>
+                    <view wx:if="{{item.BillNo}}">提单号：{{item.BillNo}}</view>
+                    <view wx:if="{{item.OwnerCode}}">经营单位编号:{{item.OwnerCode}}</view>
+                    <view wx:if="{{item.OwnerName}}">经营单位名称:{{item.OwnerName}}</view>
+                  </view>
+                </t-radio>
+              </view>
+            </t-radio-group>
+            <t-empty t-class="empty-cls" t-class-image="empty-cls-image" t-class-description="empty-cls-description" image="{{image}}" wx:else />
+          </scroll-view>
+        </view>
+    </view>
+  </t-popup>
+  <t-input label="任务名称" placeholder="请输入任务名称" model:value="{{taskName}}"></t-input>
+  <t-input label="提单编号" placeholder="请输入提单编号" model:value="{{billNo}}"></t-input>
+  <view class="h-cell">
+    <view class="h-label">订单选择</view>
+    <view class="h-wrap">
+      <view class="h-wrap__icon">
+        <view>{{ emailOrder.OrderNo ? emailOrder.OrderNo : '请选择订单编号' }}</view>
+        <t-icon name="bulletpoint" defaultValue="{{true}}" size="25" bind:tap="selectOrder"/>
+      </view>
+    </view>
+  </view>
+  <view class="h-cell">
+    <view class="h-label">是否加急</view>
+    <view class="h-wrap">
+      <t-switch slot="note" model:value="{{isUrgent}}" bind:change="handleChange"/>
+    </view>
+  </view>
+  <view class="h-cell">
+    <view class="h-label">任务内容</view>
+    <view class="h-wrap">
+      <t-textarea t-class="external-class" placeholder="请输入任务内容" disableDefaultPadding="{{true}}" model:value="{{taskContent}}"/>
+    </view>
+  </view>
+  <view class="h-button-group">
+    <t-button theme="primary" size="large" block bind:tap="postTask">发布任务</t-button>
+  </view>
+</view>

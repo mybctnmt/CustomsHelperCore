@@ -1,0 +1,35 @@
+<view class="container">
+  <scroll-view
+    class="section"
+    lower-threshold="50"
+    scroll-y
+    bindscrolltolower="scrollToLower"
+    bindrefresherrefresh="onRefresh"
+    refresher-triggered="{{triggered}}"
+    refresher-enabled
+  >
+    <view wx:if="{{taskheads.length > 0}}">
+      <t-cell t-class-description="h-class-description" wx:for="{{taskheads}}" wx:key="Id" hover bind:tap="handleTap" data-id="{{item.Id}}">
+        <view slot="title" class="h-title">
+          <view>{{item.TaskName}}</view>
+          <!-- <t-tag class="h-tag" variant="outline">标签文字</t-tag> -->
+          <t-badge count="{{ (item.ReceiverId ? item.IsCompleted ? '已完成' : '进行中' : '未接受') }}" offset="{{[0, 0]}}" shape="ribbon" slot="note" color="{{ (item.ReceiverId ? item.IsCompleted ? '#2ba471' : '#e37318' : '#d54941') }}"/>
+        </view>
+        <view slot="description">
+          <view>{{item.TaskContent}}</view>
+          <view class="custom-tag-group">
+            <t-tag variant="light-outline" theme="warning" class="custom-tag" wx:if="{{item.IsUrgent}}">加急任务</t-tag>
+            <t-tag variant="light-outline" theme="primary" class="custom-tag" wx:else>正常任务</t-tag>
+            <t-tag variant="light-outline" theme="primary" class="custom-tag" wx:if="{{item.BillNo}}">订单任务</t-tag>
+            <t-tag variant="light-outline" theme="primary" class="custom-tag" wx:else>普通任务</t-tag>
+          </view>
+        </view>
+        <view slot="note"></view>
+      </t-cell>
+      <view class="wrapper">
+        <t-loading theme="dots" size="80rpx" loading="{{isLoading}}"/>
+      </view>
+    </view>
+    <t-empty t-class="empty-cls" t-class-image="empty-cls-image" t-class-description="empty-cls-description" image="{{image}}" wx:else />
+  </scroll-view>
+</view>

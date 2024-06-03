@@ -1,0 +1,103 @@
+.container {
+  padding: 0 32rpx;
+}
+.h-card .t-row {
+  margin-top: 30rpx;
+}
+.h-card .t-row .t-col:first-child {
+  color: black;
+}
+.h-card .t-row .t-col:last-child {
+  color: black;
+}
+.taskbutton {
+  margin-top: 30rpx;
+}
+.h-card {
+  padding: 32rpx 32rpx 48rpx;
+  background-color: #fff;
+}
+.external-class {
+  padding-top: 24rpx !important;
+  padding-bottom: 24rpx !important;
+}
+.h-button-group {
+  margin-top: 30rpx;
+}
+.h-card .h-tip {
+  margin-bottom: 25rpx;
+  color: #999999;
+}
+.h-cell-group {
+  margin-top: 25rpx !important;
+  border: 1rpx solid #c0c0c0;
+}
+.block {
+  width: 100vw;
+  height: 240px;
+  background: #fff;
+  border-top-left-radius: 16rpx;
+  border-top-right-radius: 16rpx;
+}
+
+.wrapper {
+  margin: 32rpx;
+  display: block;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  height: 116rpx;
+}
+
+.title {
+  flex: 1;
+  text-align: center;
+  font-weight: 600;
+  font-size: 36rpx;
+}
+
+.btn {
+  font-size: 32rpx;
+  padding: 32rpx;
+}
+
+.btn--cancel {
+  color: rgba(0, 0, 0, .6);
+}
+
+.btn--confirm {
+  color: #0052d9;
+}
+.button-example {
+  margin: 30rpx 32rpx 0 32rpx;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32rpx;
+}
+
+.h-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 120rpx;
+  height: 100%;
+  color: white;
+}
+.h-delete-btn {
+  background-color: #e34d59;
+}
+.popup-fee {
+  height: 750rpx;
+}
+.scroll-fee {
+  height: 670rpx;
+}
+.h-card .t-textarea .t-is-disabled { 
+  color: var(--td-cell-note-color, var(--td-font-gray-3, rgba(0, 0, 0, 0.4)));
+}
+.example-search {
+  background-color: #fff;
+  padding: 16rpx 32rpx;
+}

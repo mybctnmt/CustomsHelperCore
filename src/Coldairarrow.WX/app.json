@@ -1,0 +1,47 @@
+{
+  "pages": [
+    "pages/task-hall/index",
+    "pages/my-task/index",
+    "pages/message-center/index",
+    "pages/profile-center/index",
+    "pages/common/task-detail/index",
+    "pages/my-task/subpage/add-task/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#256adf",
+    "navigationBarTitleText": "外勤小程序",
+    "navigationBarTextStyle": "white"
+  },
+  "sitemapLocation": "sitemap.json",
+  "tabBar": {
+    "color": "#191919",
+    "selectedColor": "#256adf",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "iconPath": "assets/images/icon/task-hall.png",
+        "selectedIconPath": "assets/images/icon/task-hall-selected.png",
+        "pagePath": "pages/task-hall/index",
+        "text": "任务大厅"
+      },
+      {
+        "iconPath": "assets/images/icon/my-task.png",
+        "selectedIconPath": "assets/images/icon/my-task-selected.png",
+        "pagePath": "pages/my-task/index",
+        "text": "我的任务"
+      },
+      {
+        "iconPath": "assets/images/icon/profile-center.png",
+        "selectedIconPath": "assets/images/icon/profile-center-selected.png",
+        "pagePath": "pages/profile-center/index",
+        "text": "个人中心"
+      }
+    ]
+  },
+  "resolveAlias": {
+    "@utils/*": "utils/*",
+    "@services/*": "services/*",
+    "@assets/*": "assets/*"
+  }
+}

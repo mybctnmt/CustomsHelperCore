@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "tdesign-miniprogram": "^1.2.1",
+    "wl-pinyin": "^1.0.1"
+  }
+}

@@ -1,0 +1,129 @@
+<view class="container">
+  <t-popup visible="{{visible}}" bind:visible-change="onVisibleChange" placement="bottom" class="popup-fee">
+    <view class="block">
+      <view class="header">
+        <view class="btn btn--cancel" aria-role="button" bind:tap="cancel">取消</view>
+        <view class="title">费用类别</view>
+        <view class="btn btn--confirm" aria-role="button" bind:tap="confirm">确定</view>
+      </view>
+      <view slot="content">
+        <view class="example-search">
+          <t-search bind:change="getCurrentValue" value="{{feeValue}}" placeholder="搜索费用类别" />
+        </view>
+        <scroll-view scroll-y class="scroll-fee">
+          <t-radio-group bind:change="onChange" model:value="{{costCategory}}">
+              <t-radio value="{{item.Id}}" label="{{item.FeeNameCn}}" wx:for="{{fees}}" wx:key="Id"/>
+          </t-radio-group>
+        </scroll-view>
+      </view>
+    </view>
+  </t-popup>
+  <t-divider content="任务基本信息" />
+  <view class="h-card">
+    <t-row>
+      <t-col span="8" t-class="dark">任务名称</t-col>
+      <t-col span="16" t-class="dark">{{taskInfo.ttaskhead.TaskName}}</t-col>
+    </t-row>
+    <t-row>
+      <t-col span="8" t-class="dark">任务内容</t-col>
+      <t-col span="16" t-class="dark">{{taskInfo.ttaskhead.TaskContent}}</t-col>
+    </t-row>
+    <t-row>
+      <t-col span="8" t-class="dark">是否加急</t-col>
+      <t-col span="16" t-class="dark">
+        <t-tag variant="light-outline" theme="warning" wx:if="{{taskInfo.ttaskhead.IsUrgent}}">加急任务</t-tag>
+        <t-tag variant="light-outline" theme="primary" wx:else>正常任务</t-tag>
+      </t-col>
+    </t-row>
+    <t-row>
+      <t-col span="8" t-class="dark">任务类型</t-col>
+      <t-col span="16" t-class="dark">
+        <t-tag variant="light-outline" theme="primary" wx:if="{{taskInfo.ttaskhead.BillNo}}">订单任务</t-tag>
+        <t-tag variant="light-outline" theme="primary" wx:else>普通任务</t-tag>
+      </t-col>
+    </t-row>
+    <t-row wx:if="{{taskInfo.ttaskhead.BillNo}}">
+      <t-col span="8" t-class="dark">提单号</t-col>
+      <t-col span="16" t-class="dark">{{taskInfo.ttaskhead.BillNo}}</t-col>
+    </t-row>
+    <t-row wx:if="{{taskInfo.ttaskhead.OrderNo}}">
+      <t-col span="8" t-class="dark">订单编号</t-col>
+      <t-col span="16" t-class="dark">{{taskInfo.ttaskhead.OrderNo}}</t-col>
+    </t-row>
+    <t-row wx:if="{{taskInfo.ttaskhead.TrafName}}">
+      <t-col span="8" t-class="dark">船名</t-col>
+      <t-col span="16" t-class="dark">{{taskInfo.ttaskhead.TrafName}}</t-col>
+    </t-row>
+    <t-row wx:if="{{taskInfo.ttaskhead.CusVoyageNo}}">
+      <t-col span="8" t-class="dark">航次号</t-col>
+      <t-col span="16" t-class="dark">{{taskInfo.ttaskhead.CusVoyageNo}}</t-col>
+    </t-row>
+    <t-row wx:if="{{taskInfo.ttaskhead.TradeCountry}}">
+      <t-col span="8" t-class="dark">启运国/运抵国</t-col>
+      <t-col span="16" t-class="dark">{{taskInfo.ttaskhead.TradeCountry}}</t-col>
+    </t-row>
+    <t-row wx:if="{{taskInfo.ttaskhead.CodeTS}}">
+      <t-col span="8" t-class="dark">商品编号</t-col>
+      <t-col span="16" t-class="dark">{{taskInfo.ttaskhead.CodeTS}}</t-col>
+    </t-row>
+    <t-row wx:if="{{taskInfo.ttaskhead.GName}}">
+      <t-col span="8" t-class="dark">商品名称</t-col>
+      <t-col span="16" t-class="dark">{{taskInfo.ttaskhead.GName}}</t-col>
+    </t-row>
+    <t-row wx:if="{{taskInfo.ttaskhead.OwnerCode}}">
+      <t-col span="8" t-class="dark">经营单位代码</t-col>
+      <t-col span="16" t-class="dark">{{taskInfo.ttaskhead.OwnerCode}}</t-col>
+    </t-row>
+    <t-row wx:if="{{taskInfo.ttaskhead.OwnerName}}">
+      <t-col span="8" t-class="dark">经营单位名称</t-col>
+      <t-col span="16" t-class="dark">{{taskInfo.ttaskhead.OwnerName}}</t-col>
+    </t-row>
+    <t-row wx:if="{{taskInfo.ttaskhead.OperateTime}}">
+      <t-col span="8" t-class="dark">创建时间</t-col>
+      <t-col span="16" t-class="dark">{{taskInfo.ttaskhead.OperateTime}}</t-col>
+    </t-row>
+    <t-row wx:if="{{taskInfo.ttaskhead.OperatorName}}">
+      <t-col span="8" t-class="dark">创建人</t-col>
+      <t-col span="16" t-class="dark">{{taskInfo.ttaskhead.OperatorName}}</t-col>
+    </t-row>
+  </view>
+  <t-divider content="任务反馈信息" wx:if="{{taskInfo.ttaskhead.ReceiverId}}"/>
+  <view class="h-card" wx:if="{{taskInfo.ttaskhead.ReceiverId}}">
+    <t-textarea t-class="external-class" placeholder="请输入完成内容" bordered disableDefaultPadding="{{true}}" indicator style="{{style}}" model:value="{{completedContent}}" disabled="{{taskInfo.ttaskhead.IsCompleted}}"/>
+  </view>
+  <t-divider content="任务附件信息" wx:if="{{taskInfo.ttaskhead.ReceiverId}}"/>
+  <view class="h-card" wx:if="{{taskInfo.ttaskhead.ReceiverId}}">
+    <view class="h-tip">Tip: 仅支持 [ jpg, jpeg, png, pdf ] 格式</view>
+    <h-upload mediaType="{{['file']}}" files="{{files}}" gridConfig="{{gridConfig}}" config="{{config}}" source="messageFile" bind:success="handleSuccess" bind:remove="handleRemove" disabled="{{taskInfo.ttaskhead.IsCompleted}}" extensions="{{extensions}}"></h-upload>
+  </view>
+  <t-divider content="任务费用信息" wx:if="{{taskInfo.ttaskhead.ReceiverId}}"/>
+  <view class="h-card" wx:if="{{taskInfo.ttaskhead.ReceiverId}}" style="padding: 20rpx 0rpx 20rpx;">
+    <view class="h-tip" style="padding: 10rpx 32rpx 0rpx;">{{(!taskInfo.ttaskhead.IsCompleted) ? "Tip: 左滑可以删除费用" : !(taskInfo.ttaskcosts && taskInfo.ttaskcosts.length > 0) ? "暂无费用信息" : ""}}</view>
+    <t-input wx:if="{{!taskInfo.ttaskhead.IsCompleted}}" label="费用类别" placeholder="请选择费用类别" align="right" bind:tap="costTypeTap" disabled value="{{feeNameCn}}"/>
+    <t-input
+      wx:if="{{!taskInfo.ttaskhead.IsCompleted}}"
+      label="费用金额"
+      placeholder="0.00"
+      suffix="元"
+      align="right"
+      type="digit"
+      tips="{{priceError ? '请输入正确的价格' : ''}}"
+      model:value="{{costAmount}}"
+      t-class-tips="tips"
+    />
+    <view class="button-example" wx:if="{{!taskInfo.ttaskhead.IsCompleted}}">
+      <t-button block size="medium" bind:tap="addTap">新增</t-button>
+      <t-button theme="light" block size="medium" bind:tap="saveTap">保存</t-button>
+    </view>
+    <t-cell-group theme="card" t-class="h-cell-group" wx:if="{{taskInfo.ttaskcosts && taskInfo.ttaskcosts.length > 0}}">
+      <t-swipe-cell wx:for="{{taskInfo.ttaskcosts}}" wx:key="Id">
+        <t-cell title="{{item.FeeNameCn}}" note="{{item.CostAmount}}"/>
+        <view slot="right" class="h-btn h-delete-btn" bind:tap="delTap" data-index="{{index}}" wx:if="{{!taskInfo.ttaskhead.IsCompleted}}">删除</view>
+      </t-swipe-cell>
+    </t-cell-group>
+  </view>
+  <view class="h-button-group">
+    <t-button theme="primary" size="large" block bind:tap="submitTask" disabled="{{taskInfo.ttaskhead.IsCompleted}}"  wx:if="{{taskInfo.ttaskhead.ReceiverId}}">{{taskInfo.ttaskhead.IsCompleted ? "任务已完成" : "提交任务"}}</t-button>
+    <t-button theme="primary" size="large" block bind:tap="acceptTask" wx:if="{{!taskInfo.ttaskhead.ReceiverId}}">接受任务</t-button>
+  </view>
+</view>
