@@ -79,7 +79,7 @@ namespace Coldairarrow.Api.Controllers.Base_Manage
         public async Task<string> SubmitLogin(LoginInputDTO input)
         {
             var userId = await _homeBus.SubmitLoginAsync(input);
-            List<string> activeClients = await GetActiveClientIdsAsync();
+            List<string> activeClients = await GetActiveClientIdsAsync();//已登录的账户
             if (activeClients.Contains(userId) && userId != "1642824410328993792")
             {
                 throw new BusException("当前帐户已登录！");
