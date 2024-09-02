@@ -64,7 +64,7 @@ namespace Coldairarrow.Business.Base_Manage
         [DataAddLog(UserLogType.部门管理, "Name", "部门名")]
         public async Task AddDataAsync(Base_Department newData)
         {
-            await InsertAsync(newData);
+            await AddDataAsync(newData);
         }
 
         [DataRepeatValidate(new string[] { "Name" }, new string[] { "部门名" })]

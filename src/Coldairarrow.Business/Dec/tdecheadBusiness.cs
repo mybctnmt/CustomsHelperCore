@@ -454,63 +454,84 @@ namespace Coldairarrow.Business.Dec
         [Transactional]
         public async Task<string> SWBGDataSelect(List<tdechead> orderlist)
         {
+            // 等待信号量以确保并发控制
             await semaphore.WaitAsync();
             try
             {
+                // 用于存储需要更新和插入的记录
                 List<tdechead> updateheadlist = new List<tdechead>();
                 List<tdechead> insertheadlist = new List<tdechead>();
                 List<temailorder> insertemaillist = new List<temailorder>();
+
+                // 遍历每一个传入的订单记录
                 foreach (tdechead selecthead in orderlist)
                 {
+                    // 获取查询的 IQueryable 对象
                     var q = GetIQueryable();
                     var where = LinqHelper.True<tdechead>();
+
+                    // 构建筛选条件
                     where = where.And(DynamicExpressionParser.ParseLambda<tdechead, bool>(ParsingConfig.Default, false, $@"{"SeqNo"} == (@0)", selecthead.SeqNo));
+
+                    // 如果订单号不为空，则需要额外处理
                     if (!string.IsNullOrEmpty(selecthead.OrderNo))
                     {
+                        // 查询相关的邮件记录
                         var query = from a in _db.GetIQueryable<tdechead>()
                                     join b in _db.GetIQueryable<temailorder>() on a.OrderNo equals b.OrderNo into ab
                                     from b in ab.DefaultIfEmpty()
                                     select new EmailOrderDto
-                                    { 
+                                    {
                                         OrderNo = a.OrderNo,
                                         Subject = b.Subject,
                                         SeqNo = a.SeqNo
                                     };
 
+                        // 查找对应的邮件记录
                         EmailOrderDto email = query.Where(x => x.SeqNo == selecthead.SeqNo && x.Subject == "单一窗口自动生成").FirstOrDefault();
                         if (email != null)
                         {
+                            // 删除已存在的邮件记录
                             await _temailorder.DeleteDocAsync(new List<string>() { email.OrderNo }, "3");
                         }
+                        // 追加订单号的筛选条件
                         where = where.And(DynamicExpressionParser.ParseLambda<tdechead, bool>(ParsingConfig.Default, false, $@"{"OrderNo"} == (@0)", selecthead.OrderNo));
                     }
+
+                    // 查询数据库中符合条件的记录
                     List<tdechead> heads = await q.Where(where).ToListAsync();
                     if (heads != null && heads.Any())
                     {
+                        // 更新已有记录的字段
                         heads.ForEach(x =>
                         {
                             x.BillNo = selecthead.BillNo ?? x.BillNo;
                             x.CusDecStatus = selecthead.CusDecStatus ?? x.CusDecStatus;
                             x.CusDecStatusName = selecthead.CusDecStatusName ?? x.CusDecStatusName;
                             x.EncryptString = selecthead.EncryptString ?? x.EncryptString;
+
+                            // 检查相关的邮件记录是否存在
                             var alemail = _db.GetIQueryable<temailorder>().FirstOrDefault(t => t.OrderNo == x.OrderNo);
                             if (alemail == null)
                             {
-                                temailorder email = new temailorder();
-                                email.Id = IdHelper.GetId();
-                                email.OrderNo = x.OrderNo;
-                                email.OperatorId = _operator.UserId;
-                                email.CreateTime = DateTime.Now;
-                                email.CreatorId = _operator.UserId;
-                                email.OperatorName = _operator.Property.RealName;
-                                email.SendTime = DateTime.Now;
-                                email.InboxId = IdHelper.GetId();
-                                email.IsEntryClerk = "1";
-                                email.IsReviewer = "1";
-                                email.IsVerifier = "1";
-                                email.Subject = "单一窗口自动生成";
-                                email.CusDecStatus = selecthead.CusDecStatus;
-                                email.CusDecStatusName = selecthead.CusDecStatusName;
+                                // 如果邮件记录不存在，则添加新邮件记录
+                                temailorder email = new temailorder
+                                {
+                                    Id = IdHelper.GetId(),
+                                    OrderNo = x.OrderNo,
+                                    OperatorId = _operator.UserId,
+                                    CreateTime = DateTime.Now,
+                                    CreatorId = _operator.UserId,
+                                    OperatorName = _operator.Property.RealName,
+                                    SendTime = DateTime.Now,
+                                    InboxId = IdHelper.GetId(),
+                                    IsEntryClerk = "1",
+                                    IsReviewer = "1",
+                                    IsVerifier = "1",
+                                    Subject = "单一窗口自动生成",
+                                    CusDecStatus = selecthead.CusDecStatus,
+                                    CusDecStatusName = selecthead.CusDecStatusName
+                                };
                                 insertemaillist.Add(email);
                             }
                         });
@@ -518,34 +539,39 @@ namespace Coldairarrow.Business.Dec
                     }
                     else if (selecthead.OrderNo.IsNullOrEmpty())
                     {
-
+                        // 如果订单号为空，则生成新的订单号并添加到插入列表中
                         selecthead.OrderNo = _temailorder.GetOrderNo().Result;
                         insertheadlist.Add(selecthead);
 
-                        temailorder email = new temailorder();
-                        email.Id = IdHelper.GetId();
-                        email.OrderNo = selecthead.OrderNo;
-                        email.OperatorId = _operator.UserId;
-                        email.CreateTime = DateTime.Now;
-                        email.OperatorName = _operator.Property.RealName;
-                        email.CreatorId = _operator.UserId;
-                        email.InboxId = IdHelper.GetId();
-                        email.SendTime = DateTime.Now;
-                        email.IsEntryClerk = "1";
-                        email.IsReviewer = "1";
-                        email.IsVerifier = "1";
-                        email.Subject = "单一窗口自动生成";
-                        email.CusDecStatus = selecthead.CusDecStatus;
-                        email.CusDecStatusName = selecthead.CusDecStatusName;
+                        temailorder email = new temailorder
+                        {
+                            Id = IdHelper.GetId(),
+                            OrderNo = selecthead.OrderNo,
+                            OperatorId = _operator.UserId,
+                            CreateTime = DateTime.Now,
+                            OperatorName = _operator.Property.RealName,
+                            CreatorId = _operator.UserId,
+                            InboxId = IdHelper.GetId(),
+                            SendTime = DateTime.Now,
+                            IsEntryClerk = "1",
+                            IsReviewer = "1",
+                            IsVerifier = "1",
+                            Subject = "单一窗口自动生成",
+                            CusDecStatus = selecthead.CusDecStatus,
+                            CusDecStatusName = selecthead.CusDecStatusName
+                        };
                         insertemaillist.Add(email);
                     }
                     else
                     {
+                        // 订单号已存在，但未在数据库中找到记录，则直接插入
                         insertheadlist.Add(selecthead);
                     }
                 }
+
                 try
                 {
+                    // 执行数据库更新操作
                     if (updateheadlist.Count > 0)
                         await UpdateAsync(updateheadlist);
                     if (insertheadlist.Count > 0)
@@ -553,14 +579,20 @@ namespace Coldairarrow.Business.Dec
                     if (insertemaillist.Count > 0)
                         await _db.InsertAsync<temailorder>(insertemaillist);
                 }
-                catch (Exception ex) { throw ex; }
+                catch (Exception ex)
+                {
+                    // 捕获并抛出异常
+                    throw ex;
+                }
+
+                // 返回修改和插入的记录数量
                 return "修改条数：" + updateheadlist.Count + "、插入条数：" + insertheadlist.Count;
             }
             finally
             {
+                // 释放信号量
                 semaphore.Release();
             }
-            
         }
 
         public async Task<List<DeclarationListDto>> GetDataListWhereAsync(List<ConditionDTO> searchs)
